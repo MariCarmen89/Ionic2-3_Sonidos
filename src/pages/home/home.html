@@ -3,15 +3,42 @@
     <ion-title>
       Sonidos Apps
     </ion-title>
+
+    <ion-buttons end>
+      <button ion-button
+              *ngIf="!ordenando"
+              (click)="ordenando = true">
+       Ordenando
+      </button>
+    </ion-buttons>
+
+    <ion-buttons end>
+      <button ion-button
+              *ngIf="ordenando"
+              (click)="ordenando = false">
+       Listo
+      </button>
+    </ion-buttons>
+
   </ion-navbar>
 </ion-header>
 
 <ion-content>
 
-    <ion-list>
-      <ion-item-sliding *ngFor="let animal of animales; let i = index">
+  <!-- Refrescar bajando hacia abajo: -->
+  <ion-refresher (ionRefresh)="recargar_animales($event)"
+                *ngIf="!ordenando"> <!-- si esta ordenando que no se 
+                                    active el refresh porque sino cuando
+                                    bajamos sale el refesh y no lo hace bien-->
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
 
-       <ion-item (click)="reproducir(animal)">
+  <!-- Ordenar la lista-->
+  <!-- <ion-list reorder="true"> -->
+  <ion-list [reorder]="ordenando" (ionItemReorder)="reordenar_animales( $event )">
+    <ion-item-sliding *ngFor="let animal of animales; let i = index">
+
+      <ion-item (click)="reproducir(animal)">
          <ion-avatar item-left>
            <img [src]="animal.imagen">
          </ion-avatar>
@@ -20,6 +47,7 @@
           <ion-icon *ngIf="animal.reproduciendo" name="pause" item-right></ion-icon>
        </ion-item>
 
+      <!-- Opciones deslizando hasta la derecha-->
       <ion-item-options side="right">
         <button ion-button color="danger" (click)="borrar_animal( i )">
           <ion-icon name="trash"></ion-icon>
