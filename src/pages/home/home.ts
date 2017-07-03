@@ -3,6 +3,8 @@ import { Component } from '@angular/core';
 import { ANIMALES } from "../../data/data.animales";
 import { Animal } from "../../interaces/animal.interface";
 
+import { Refresher } from "ionic-angular";
+
 @Component({
   selector: 'page-home',
   templateUrl: 'home.html'
@@ -14,7 +16,7 @@ export class HomePage {
   audioTiempo: any;   //para controlar el setTimeout
 
   constructor() {
-    this.animales = ANIMALES.splice(0); //Hago un clon de ANIMALES para poder trabajar con esos datos y modif.
+    this.animales = ANIMALES.slice(0); //Hago un clon de ANIMALES para poder trabajar con esos datos y modif.
   }
 
   reproducir(animal:Animal){
@@ -54,4 +56,16 @@ export class HomePage {
       this.animales.splice(idx, 1); //eliminar el animal
     }
 
+    //Refrescar aplicacion
+    recargar_animales( refresher:Refresher ){
+      console.log("Inicio del refresh");
+
+      //Para que se vea más tiempo
+      setTimeout(() => {
+        console.log("Termino el refresh");
+        this.animales = ANIMALES.slice(0);
+
+        refresher.complete();
+      }, 1500)
+    }
 }
